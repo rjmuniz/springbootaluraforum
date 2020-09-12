@@ -1,5 +1,7 @@
 package br.com.alura.forum.controller.form;
 
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+
 public class LoginForm {
 	public String getUsername() {
 		return username;
@@ -15,6 +17,9 @@ public class LoginForm {
 	}
 	public void setPassword(String password) {
 		this.password = password;
+	}
+	public UsernamePasswordAuthenticationToken converter() {
+		return new UsernamePasswordAuthenticationToken(username, password);
 	}
 	
 }

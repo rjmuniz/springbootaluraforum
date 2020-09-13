@@ -43,21 +43,26 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	// Configurações de AuthZ
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		http.authorizeRequests().antMatchers(HttpMethod.POST, "/auth").permitAll()
-				.antMatchers(HttpMethod.GET, "/topicos").permitAll().antMatchers(HttpMethod.GET, "/topicos/*")
-				.permitAll()
+		http.authorizeRequests()
+		
+			.antMatchers(HttpMethod.POST, "/auth").permitAll()
+			
+			.antMatchers(HttpMethod.GET, "/topicos").permitAll()
+			.antMatchers(HttpMethod.GET, "/topicos/*").permitAll()
+			
+			.antMatchers(HttpMethod.GET, "/actuator").permitAll()
+			.antMatchers(HttpMethod.GET, "/actuator/**").permitAll()
+			// .antMatchers ("/h2-console/").permitAll()
+			// .antMatchers("/h2-console/*").permitAll()
 
-				// .antMatchers ("/h2-console/").permitAll()
-				// .antMatchers("/h2-console/*").permitAll()
+			.anyRequest().authenticated()
 
-				.anyRequest().authenticated()
+			.and().csrf().disable()
 
-				.and().csrf().disable()
+			.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 
-				.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-
-				.and().addFilterBefore(new AutenticacaoViaTokenFilter(tokenService, usuarioRepository),
-						UsernamePasswordAuthenticationFilter.class);
+			.and().addFilterBefore(new AutenticacaoViaTokenFilter(tokenService, usuarioRepository),
+					UsernamePasswordAuthenticationFilter.class);
 	}
 
 	// Configurações de recursos estáticos

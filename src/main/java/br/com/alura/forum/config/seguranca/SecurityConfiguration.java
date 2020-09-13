@@ -44,33 +44,35 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http.authorizeRequests()
-		
-			.antMatchers(HttpMethod.POST, "/auth").permitAll()
-			
-			.antMatchers(HttpMethod.GET, "/topicos").permitAll()
-			.antMatchers(HttpMethod.GET, "/topicos/*").permitAll()
-			
-			.antMatchers(HttpMethod.GET, "/actuator").permitAll()
-			.antMatchers(HttpMethod.GET, "/actuator/**").permitAll()
-			// .antMatchers ("/h2-console/").permitAll()
-			// .antMatchers("/h2-console/*").permitAll()
 
-			.anyRequest().authenticated()
+				.antMatchers(HttpMethod.POST, "/auth").permitAll()
 
-			.and().csrf().disable()
+				.antMatchers(HttpMethod.GET, "/topicos").permitAll().antMatchers(HttpMethod.GET, "/topicos/*")
+				.permitAll()
 
-			.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+				.antMatchers(HttpMethod.GET, "/actuator").permitAll().antMatchers(HttpMethod.GET, "/actuator/**")
+				.permitAll()
 
-			.and().addFilterBefore(new AutenticacaoViaTokenFilter(tokenService, usuarioRepository),
-					UsernamePasswordAuthenticationFilter.class);
+				
+				// .antMatchers ("/h2-console/").permitAll()
+				// .antMatchers("/h2-console/*").permitAll()
+
+				.anyRequest().authenticated()
+
+				.and().csrf().disable()
+
+				.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+
+				.and().addFilterBefore(new AutenticacaoViaTokenFilter(tokenService, usuarioRepository),
+						UsernamePasswordAuthenticationFilter.class);
 	}
 
 	// Configurações de recursos estáticos
 	@Override
 	public void configure(WebSecurity web) throws Exception {
 		web.ignoring()
-
-				.antMatchers("/h2-console/").antMatchers("/h2-console/*");
+			.antMatchers("/**.html", "/v2/api-docs/**", "/webjars/**", 
+					"/configuration/**", "/swagger-resources/**","/h2-console/","/h2-console/*");
 	}
 
 	/*
